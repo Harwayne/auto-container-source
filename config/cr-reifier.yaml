@@ -1,0 +1,49 @@
+# Copyright 2018 The Knative Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  namespace: knative-sources
+  name: auto-container-cr-reifier-metacontroller
+spec:
+  selector:
+    matchLabels: &labels
+      autoContainerSource: controller
+      role: cr-reifier-controller
+  template:
+    metadata:
+      labels: *labels
+    spec:
+      containers:
+        - name: controller
+          image: docker.io/DOCKER_USER/auto-container-cr-reifier:latest
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: knative-sources
+  name: auto-container-cr-reifier-metacontroller
+spec:
+  type: ClusterIP
+  selector:
+    autoContainerSource: controller
+    role: cr-reifier-controller
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8080
