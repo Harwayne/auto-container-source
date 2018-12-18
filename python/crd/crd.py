@@ -37,6 +37,7 @@ def new_composite_controller(crd):
             },
         },
         'spec': {
+            'resyncPeriodSeconds': 60,
             'generateSelector': True,
             'parentResource': {
                 'apiVersion': '%s/%s' % (crd['spec']['group'], crd['spec']['version']), # TODO Use crd.spec.versions[].name instead.
